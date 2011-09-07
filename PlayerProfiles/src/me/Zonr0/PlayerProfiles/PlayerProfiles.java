@@ -3,6 +3,7 @@ package me.Zonr0.PlayerProfiles;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
 
+//comment
 
 public class PlayerProfiles extends JavaPlugin {
 
