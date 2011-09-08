@@ -93,8 +93,11 @@ public class ProfileHandler {
 		
 	}
 	
-	public void updateLastSeen(Player target)
+	public void updateLastSeen(Player target) throws SQLException
 	{
+		Date curTime = new Date();
+		String updateQuery = "UPDATE profiles SET lastSeen='" + curTime.toString() + "' WHERE username='" + target.getName() + "'";
+		plugin.dbManager.query(updateQuery);
 	}
 	
 	public boolean isRegistered(Player target) throws SQLException

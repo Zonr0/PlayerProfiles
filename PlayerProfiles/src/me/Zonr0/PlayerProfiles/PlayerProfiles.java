@@ -27,6 +27,9 @@ public class PlayerProfiles extends JavaPlugin {
 	private final PlayerProfilesPlayerListener playerListener = new PlayerProfilesPlayerListener(this);
 	
 	public void onEnable() {
+		PluginManager pm = this.getServer().getPluginManager();
+		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
 		log.info("PlayerProfiles has been enabled!");
 		
 		createPluginFolder();
@@ -44,10 +47,6 @@ public class PlayerProfiles extends JavaPlugin {
 		{
 			log.info("Table failed to initialize");
 		}
-		
-		PluginManager pm = this.getServer().getPluginManager();
-		pm.registerEvent(Event.Type.PLAYER_LOGIN, playerListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
 	}
 	
 	public void onDisable() {
