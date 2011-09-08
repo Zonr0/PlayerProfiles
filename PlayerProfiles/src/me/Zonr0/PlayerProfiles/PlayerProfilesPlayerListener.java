@@ -1,18 +1,12 @@
 package me.Zonr0.PlayerProfiles;
 
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import lib.PatPeter.SQLibrary.*;
 
 public class PlayerProfilesPlayerListener extends PlayerListener {
 	

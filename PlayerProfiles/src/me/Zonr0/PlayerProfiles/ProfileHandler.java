@@ -5,10 +5,7 @@ import java.sql.ResultSet;
 import java.util.Date;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import lib.PatPeter.SQLibrary.*;
 
 public class ProfileHandler {
 	public PlayerProfiles plugin;
@@ -21,7 +18,6 @@ public class ProfileHandler {
 	{
 		Date currentDate = new Date();
 		String sizeQuery = "SELECT COUNT(*) as count FROM profiles WHERE username='" + sender.getName() + "'";
-		String checkQuery = "SELECT * FROM profiles WHERE username='" + sender.getName() + "'";
 		String registerQuery = "INSERT INTO profiles (username, firstregistered, lastseen) VALUES (" + "'" + sender.getName() + "','" + currentDate.toString() + "','" + currentDate.toString() + "')";
 		
 		ResultSet result = plugin.dbManager.query(sizeQuery);
