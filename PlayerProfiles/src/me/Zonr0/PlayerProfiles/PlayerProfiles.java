@@ -3,6 +3,7 @@ package me.Zonr0.PlayerProfiles;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,7 +31,7 @@ public class PlayerProfiles extends JavaPlugin {
 		
 		createPluginFolder();
 		
-		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY AUTO_INCREMENT, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'twitteraccount' VARCHAR(30), 'from' VARCHAR(255), 'firstregistered' VARCHAR(255) NOT NULL, 'lastseen' VARCHAR(255));";
+		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY AUTO_INCREMENT, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'twitteraccount' VARCHAR(30), 'from' VARCHAR(255), 'bio' TEXT, 'firstregistered' VARCHAR(255) NOT NULL, 'lastseen' VARCHAR(255));";
 		
 		dbManager = new SQLite(this.log, this.logPrefix, "profiles", pFolder.getPath());
 		dbManager.open();
@@ -56,27 +57,44 @@ public class PlayerProfiles extends JavaPlugin {
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		if(cmd.getName().equalsIgnoreCase("debug")){ // If the player typed /debug then do the following...
+		String viewTarget;
+		
+		if(cmd.getName().equalsIgnoreCase("debug"))
+		{ // If the player typed /debug then do the following...
 			log.info("Debug information goes here.");
 			return true;
 		}
-		else if (cmd.getName().equalsIgnoreCase("profile")) {
+		else if (cmd.getName().equalsIgnoreCase("profile")) 
+		{
 			if (args[0].equalsIgnoreCase("register"))
 			{
-				try {
-					pHandler.registerPlayer(sender.toString());
+				try 
+				{
+					pHandler.registerPlayer(sender);
 					
-				} catch (SQLException e) {
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			else if (args[0].equalsIgnoreCase("view"))
+			{
+				viewTarget = args[1];
+				try
+				{
+				pHandler.viewPlayer(sender, viewTarget);
+				} catch (SQLException e)
+				{
 					e.printStackTrace();
 				}
 			}
 			else
 			{
-				player.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|origin)
+				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|origin");
 			}
-			
 			return true;
-		} //If this has happened the function will break and return true. if this hasn't happened the a value of false will be returned.
+		}
+		 //If this has happened the function will break and return true. if this hasn't happened the a value of false will be returned.
 		return false; 
 	}
 	

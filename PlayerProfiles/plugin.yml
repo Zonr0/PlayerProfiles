@@ -7,3 +7,9 @@ commands:
         permission: PlayerProfiles.debug
         usage:   |
           /debug
+    profile:
+        description: handles the player profile registration and viewing.
+        permission: playerProfiles.profile
+        usage:   |
+         /profile register
+         /profile view <target>
