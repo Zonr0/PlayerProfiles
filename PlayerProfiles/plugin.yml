@@ -3,7 +3,7 @@ main: me.Zonr0.PlayerProfiles.PlayerProfiles
 version: "0.1"
 commands:
     debug:
-	    description: Prints debugging information.
-		permission: PlayerProfiles.debug
-		usage:   |
-		      /debug
+        description: Prints debugging information.
+        permission: PlayerProfiles.debug
+        usage:   |
+          /debug
