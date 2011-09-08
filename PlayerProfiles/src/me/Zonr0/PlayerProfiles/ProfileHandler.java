@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import lib.PatPeter.SQLibrary.*;
 
@@ -16,24 +17,25 @@ public class ProfileHandler {
 		this.plugin = instance;
 	}
 
-	public void registerPlayer(CommandSender sender) throws SQLException
+	public void registerPlayer(Player sender) throws SQLException
 	{
 		Date currentDate = new Date();
-		String checkQuery = "SELECT username FROM profiles where username='" + sender.getName() + "'";
-		String registerQuery = "INSERT INTO profiles (username, firstregistered, lastseen) VALUES (" + sender.getName() + "," + currentDate.toString() + "," + currentDate.toString();
+		String sizeQuery = "SELECT COUNT(*) as count FROM profiles WHERE username='" + sender.getName() + "'";
+		String checkQuery = "SELECT * FROM profiles WHERE username='" + sender.getName() + "'";
+		String registerQuery = "INSERT INTO profiles (username, firstregistered, lastseen) VALUES (" + "'" + sender.getName() + "','" + currentDate.toString() + "','" + currentDate.toString() + "')";
 		
-		ResultSet result = plugin.dbManager.query(checkQuery);
+		ResultSet result = plugin.dbManager.query(sizeQuery);
 		
-		if (result.getString("username") != null)
+		if (result.getInt("count") > 0)
 		{
 			sender.sendMessage(ChatColor.RED + "Unable to register. Record already exists in the database.");
 			return;
 		}
-		plugin.dbManager.query(registerQuery);
+		result = plugin.dbManager.query(registerQuery);
 		sender.sendMessage(ChatColor.RED + "Registered Succesfully!");
 	}
 	
-	public void viewPlayer(CommandSender requester, String viewTarget) throws SQLException
+	public void viewPlayer(Player requester, String viewTarget) throws SQLException
 	{
 		
 		String realName;
@@ -43,8 +45,18 @@ public class ProfileHandler {
 		String registerDate;
 		String lastSeenDate;
 		
-		String viewQuery = "SELECT as viewData FROM profiles WHERE username='" + viewTarget + "'";
-		ResultSet result = plugin.dbManager.query(viewQuery);
+		String viewQuery = "SELECT * FROM profiles WHERE username='" + viewTarget + "'";
+		String countQuery = "SELECT COUNT(*) as count FROM profiles WHERE username ='" + viewTarget + "'";
+		
+		ResultSet result = plugin.dbManager.query(countQuery);
+		
+		if (result.getInt("count") == 0)
+		{
+			requester.sendMessage(ChatColor.RED + "Empty database, no usernames to view.");
+			return;
+		}
+		
+		result = plugin.dbManager.query(viewQuery);
 		
 		if (result.getInt("id") == 0)
 		{
@@ -79,8 +91,53 @@ public class ProfileHandler {
 		requester.sendMessage(ChatColor.RED + "Registered on: " + ChatColor.WHITE + registerDate);
 		requester.sendMessage(ChatColor.RED + "Last Seen on: " + ChatColor.WHITE + lastSeenDate);
 		
+	}
+	
+	public void updateLastSeen(Player target)
+	{
+	}
+	
+	public boolean isRegistered(Player target) throws SQLException
+	{
+		String viewQuery = "SELECT * FROM profiles WHERE username='" + target.getName() + "'";
+		String countQuery = "SELECT COUNT(*) as count FROM profiles WHERE username ='" + target.getName() + "'";
 		
+		ResultSet result = plugin.dbManager.query(countQuery);
 		
+		if (result.getInt("count") == 0)
+		{
+			return false;
+		}
 		
+		result = plugin.dbManager.query(viewQuery);
+		
+		if (result.getInt("id") == 0)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean isRegistered(String target) throws SQLException
+	{
+		String viewQuery = "SELECT * FROM profiles WHERE username='" + target + "'";
+		String countQuery = "SELECT COUNT(*) as count FROM profiles WHERE username ='" + target + "'";
+		
+		ResultSet result = plugin.dbManager.query(countQuery);
+		
+		if (result.getInt("count") == 0)
+		{
+			return false;
+		}
+		
+		result = plugin.dbManager.query(viewQuery);
+		
+		if (result.getInt("id") == 0)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }

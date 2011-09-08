@@ -31,7 +31,7 @@ public class PlayerProfiles extends JavaPlugin {
 		
 		createPluginFolder();
 		
-		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY AUTO_INCREMENT, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'twitteraccount' VARCHAR(30), 'from' VARCHAR(255), 'bio' TEXT, 'firstregistered' VARCHAR(255) NOT NULL, 'lastseen' VARCHAR(255));";
+		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'twitteraccount' VARCHAR(30), 'from' VARCHAR(255), 'bio' TEXT, 'firstregistered' VARCHAR(255) NOT NULL, 'lastseen' VARCHAR(255));";
 		
 		dbManager = new SQLite(this.log, this.logPrefix, "profiles", pFolder.getPath());
 		dbManager.open();
@@ -46,7 +46,8 @@ public class PlayerProfiles extends JavaPlugin {
 		}
 		
 		PluginManager pm = this.getServer().getPluginManager();
-		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_LOGIN, playerListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
 	}
 	
 	public void onDisable() {
@@ -58,6 +59,7 @@ public class PlayerProfiles extends JavaPlugin {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		String viewTarget;
+		Player user = (Player)sender;
 		
 		if(cmd.getName().equalsIgnoreCase("debug"))
 		{ // If the player typed /debug then do the following...
@@ -70,7 +72,7 @@ public class PlayerProfiles extends JavaPlugin {
 			{
 				try 
 				{
-					pHandler.registerPlayer(sender);
+					pHandler.registerPlayer(user);
 					
 				} catch (SQLException e)
 				{
@@ -82,7 +84,7 @@ public class PlayerProfiles extends JavaPlugin {
 				viewTarget = args[1];
 				try
 				{
-				pHandler.viewPlayer(sender, viewTarget);
+				pHandler.viewPlayer(user, viewTarget);
 				} catch (SQLException e)
 				{
 					e.printStackTrace();
