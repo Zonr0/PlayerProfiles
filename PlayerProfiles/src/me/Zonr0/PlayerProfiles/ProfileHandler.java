@@ -130,6 +130,8 @@ public class ProfileHandler {
 		ResultSet results = plugin.dbManager.query(getQuery);
 		
 		int readNames = 0;
+		target.sendMessage(ChatColor.RED + "Last 10 registered players seen.");
+		target.sendMessage(ChatColor.RED + "---------------------------------------------");
 		while(results.next() && readNames < LIST_SIZE)
 		{
 			profileLine.append(results.getString("username"));

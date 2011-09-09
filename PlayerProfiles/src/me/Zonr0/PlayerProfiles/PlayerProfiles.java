@@ -68,6 +68,7 @@ public class PlayerProfiles extends JavaPlugin {
 		//Main PlayerProfiles Commands
 		else if (cmd.getName().equalsIgnoreCase("profile")) 
 		{
+			String fullText = grabText(args);
 			//********
 			//Register
 			//********
@@ -101,14 +102,9 @@ public class PlayerProfiles extends JavaPlugin {
 			//****
 			else if (args[0].equalsIgnoreCase("name"))
 			{
-				String fullName = "";
-				for (int i = 1; i < args.length; i++)
-				{
-					fullName = fullName + args[i];
-				}
 				try
 				{
-				pHandler.updateName(user, fullName);
+				pHandler.updateName(user, fullText);
 				} catch (SQLException e)
 				{
 					e.printStackTrace();
@@ -119,14 +115,9 @@ public class PlayerProfiles extends JavaPlugin {
 			//*******
 			else if (args[0].equalsIgnoreCase("twitter"))
 			{
-				String fullTwitter = "";
-				for (int i = 1; i < args.length; i++)
-				{
-					fullTwitter = fullTwitter + args[i];
-				}
 				try
 				{
-				pHandler.updateTwitter(user, fullTwitter);
+				pHandler.updateTwitter(user, fullText);
 				} catch (SQLException e)
 				{
 					e.printStackTrace();
@@ -137,14 +128,9 @@ public class PlayerProfiles extends JavaPlugin {
 			//****
 				else if (args[0].equalsIgnoreCase("from"))
 				{
-					String fullFrom = "";
-					for (int i = 1; i < args.length; i++)
-					{
-						fullFrom = fullFrom + args[i];
-					}
 					try
 					{
-					pHandler.updateFrom(user, fullFrom);
+					pHandler.updateFrom(user, fullText);
 					} catch (SQLException e)
 					{
 						e.printStackTrace();
@@ -155,14 +141,9 @@ public class PlayerProfiles extends JavaPlugin {
 			//***
 				else if (args[0].equalsIgnoreCase("bio"))
 				{
-					String fullBio = "";
-					for (int i = 1; i < args.length; i++)
-					{
-						fullBio = fullBio + args[i];
-					}
 					try
 					{
-					pHandler.updateBio(user, fullBio);
+					pHandler.updateBio(user, fullText);
 					} catch (SQLException e)
 					{
 						e.printStackTrace();
@@ -181,9 +162,26 @@ public class PlayerProfiles extends JavaPlugin {
 						e.printStackTrace();
 					}
 				}
+			//Help
+				else if (args[0].equalsIgnoreCase("help"))
+				{
+					user.sendMessage("PlayerProfiles is a system for keeping track of various pieces of personal information." +
+				                     "It is designed for simple use. To register yourself, simply type /profile register and" +
+				                     "you will be registered in the database. To fully take advantage of this system you will" +
+				                     "want to fill out a few other fields to help identify you. Available fields are:" +
+				                     "\n/profile name - Your real name." +
+				                     "\n/profile twitter - Your twitter account" +
+				                     "\n/profile from - Where you are coming from, how you know about this server. ie: personal friend, etc." +
+				                     "\n/profile bio - A short description of who you are." +
+				                     "\nThere are other commands available to you as well:" +
+				                     "\n/profile view <username> - View a user's profile." +
+				                     "\n/profile list - List the last ten registered users seen." +
+				                     "\n/profile help - Display this message." +
+				                     "\n/profile about - Display plugin information.");
+				}
 			else
 			{
-				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|from||bio|list|fulllist|help");
+				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|from||bio|list|help|about");
 			}
 			return true;
 		}
@@ -195,5 +193,14 @@ public class PlayerProfiles extends JavaPlugin {
 		if (!this.pFolder.exists()) {
 			pFolder.mkdir();
 		}
+	}
+	private String grabText(String[] args)
+	{
+		String output = "";
+		for (int i = 1; i < args.length; i++)
+		{
+			output = output + args[i] + " ";
+		}
+		return output;
 	}
 }
