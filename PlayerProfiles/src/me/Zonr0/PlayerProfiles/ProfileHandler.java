@@ -1,6 +1,7 @@
 package me.Zonr0.PlayerProfiles;
 
 import java.util.List;
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.text.DateFormat;
@@ -21,9 +22,8 @@ public class ProfileHandler {
 
 	public void registerPlayer(Player sender) throws SQLException
 	{
-		Timestamp currentDate = new Timestamp(0);
 		String sizeQuery = "SELECT COUNT(*) as count FROM profiles WHERE username='" + sender.getName() + "'";
-		String registerQuery = "INSERT INTO profiles (username, firstregistered, lastseen) VALUES (" + "'" + sender.getName() + "','" + currentDate.toString() + "','" + currentDate.toString() + "')";
+		String registerQuery = "INSERT INTO profiles (username, firstregistered, lastseen) VALUES (" + "'" + sender.getName() + "', NOW(), NOW())";
 		
 		ResultSet result = plugin.dbManager.query(sizeQuery);
 		
@@ -96,8 +96,7 @@ public class ProfileHandler {
 	
 	public void updateLastSeen(Player target) throws SQLException
 	{
-		Date curTime = new Date();
-		String updateQuery = "UPDATE profiles SET lastSeen='" + curTime.toString() + "' WHERE username='" + target.getName() + "'";
+		String updateQuery = "UPDATE profiles SET lastSeen=NOW() WHERE username='" + target.getName() + "'";
 		plugin.dbManager.query(updateQuery);
 	}
 	
@@ -127,27 +126,32 @@ public class ProfileHandler {
 	}
 	public void getSmallPlayerList(Player target) throws SQLException
 	{
+		Timestamp workStamp = new Timestamp(0);
 		//TODO: Refactor the date field to use SQL dates instead of java dates.
 		int LIST_SIZE = 10;
-		DateFormat format = DateFormat.getDateTimeInstance();
-		List<Date> dateList = new ArrayList<Date>();
-		String dateString;
+		int NAME_BUFFER = 25;
 		
-		String getQuery = "SELECT username,lastseen  FROM profiles";
+		StringBuilder profileLine = new StringBuilder();
+		String output;
+		
+		String getQuery = "SELECT username,lastseen  FROM profiles ORDER BY lastseen";
 		ResultSet results = plugin.dbManager.query(getQuery);
 		
-		while(results.next())
+		int readNames = 0;
+		while(results.next() && readNames < LIST_SIZE)
 		{
-			dateString = results.getString("lastseen");
-			try {
-				dateList.add(format.parse(dateString));
-			} catch (java.text.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			profileLine.append(results.getString("username"));
+			while(profileLine.length() < NAME_BUFFER)
+			{
+				profileLine.append(' ');
 			}
+			workStamp = (results.getTimestamp("lastseen"));
+			profileLine.append(workStamp.toString());
+			readNames++;
 		}
-		Collections.
-		Collections.sort(dateList);
+		output = profileLine.toString();
+		target.sendMessage(output);
+		
 	}
 	
 	public boolean isRegistered(Player target) throws SQLException
