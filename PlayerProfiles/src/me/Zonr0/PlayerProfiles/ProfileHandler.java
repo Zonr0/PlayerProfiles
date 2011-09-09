@@ -1,17 +1,10 @@
 package me.Zonr0.PlayerProfiles;
 
-import java.util.List;
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.sql.Timestamp;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.json.simple.parser.ParseException;
 
 public class ProfileHandler {
 	public PlayerProfiles plugin;
@@ -23,7 +16,7 @@ public class ProfileHandler {
 	public void registerPlayer(Player sender) throws SQLException
 	{
 		String sizeQuery = "SELECT COUNT(*) as count FROM profiles WHERE username='" + sender.getName() + "'";
-		String registerQuery = "INSERT INTO profiles (username, firstregistered, lastseen) VALUES (" + "'" + sender.getName() + "', NOW(), NOW())";
+		String registerQuery = "INSERT INTO profiles (username, firstregistered, lastseen) VALUES (" + "'" + sender.getName() + "', datetime('now'), datetime('now'))";
 		
 		ResultSet result = plugin.dbManager.query(sizeQuery);
 		
@@ -32,7 +25,7 @@ public class ProfileHandler {
 			sender.sendMessage(ChatColor.RED + "Unable to register. Record already exists in the database.");
 			return;
 		}
-		result = plugin.dbManager.query(registerQuery);
+		plugin.dbManager.query(registerQuery);
 		sender.sendMessage(ChatColor.RED + "Registered Succesfully!");
 	}
 	
@@ -66,10 +59,10 @@ public class ProfileHandler {
 		}
 		realName = result.getString("realname");
 		twitterAccount = result.getString("twitteraccount");
-		from = result.getString("from");
+		from = result.getString("origin");
 		bio = result.getString("bio");
-		registerDate = result.getTimestamp("firstregistered").toString();
-		lastSeenDate = result.getTimestamp("lastseen").toString();
+		registerDate = result.getString("firstregistered");
+		lastSeenDate = result.getString("lastseen");
 		
 		String nameLine = ChatColor.RED + "Name: " + ChatColor.WHITE + viewTarget;
 		if (realName != null)
@@ -96,7 +89,7 @@ public class ProfileHandler {
 	
 	public void updateLastSeen(Player target) throws SQLException
 	{
-		String updateQuery = "UPDATE profiles SET lastSeen=NOW() WHERE username='" + target.getName() + "'";
+		String updateQuery = "UPDATE profiles SET lastSeen=datetime('now') WHERE username='" + target.getName() + "'";
 		plugin.dbManager.query(updateQuery);
 	}
 	
@@ -115,7 +108,7 @@ public class ProfileHandler {
 	public void updateFrom(Player target, String from) throws SQLException
 	{
 		String sanFrom = sanitizeInput(from);
-		String updateQuery = "UPDATE profiles SET from='" + sanFrom + "' WHERE username='" + target.getName() + "'";
+		String updateQuery = "UPDATE profiles SET origin='" + sanFrom + "' WHERE username='" + target.getName() + "'";
 		plugin.dbManager.query(updateQuery);
 	}
 	public void updateBio(Player target, String bio) throws SQLException
@@ -126,7 +119,6 @@ public class ProfileHandler {
 	}
 	public void getSmallPlayerList(Player target) throws SQLException
 	{
-		Timestamp workStamp = new Timestamp(0);
 		//TODO: Refactor the date field to use SQL dates instead of java dates.
 		int LIST_SIZE = 10;
 		int NAME_BUFFER = 25;
@@ -134,7 +126,7 @@ public class ProfileHandler {
 		StringBuilder profileLine = new StringBuilder();
 		String output;
 		
-		String getQuery = "SELECT username,lastseen  FROM profiles ORDER BY lastseen";
+		String getQuery = "SELECT username,lastseen  FROM profiles ORDER BY lastseen DESC";
 		ResultSet results = plugin.dbManager.query(getQuery);
 		
 		int readNames = 0;
@@ -145,12 +137,14 @@ public class ProfileHandler {
 			{
 				profileLine.append(' ');
 			}
-			workStamp = (results.getTimestamp("lastseen"));
-			profileLine.append(workStamp.toString());
+			profileLine.append(results.getString("lastseen"));
+			output = profileLine.toString();
+			target.sendMessage(output);
+			profileLine.delete(0, profileLine.length());
+			//profileLine.append(workStamp.toString());
 			readNames++;
 		}
-		output = profileLine.toString();
-		target.sendMessage(output);
+
 		
 	}
 	

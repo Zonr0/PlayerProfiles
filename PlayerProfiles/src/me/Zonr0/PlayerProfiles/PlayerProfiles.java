@@ -34,7 +34,7 @@ public class PlayerProfiles extends JavaPlugin {
 		
 		createPluginFolder();
 		
-		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'twitteraccount' VARCHAR(30), 'from' VARCHAR(255), 'bio' TEXT, 'firstregistered' TIMESTAMP NOT NULL, 'lastseen' TIMESTAMP);";
+		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'twitteraccount' VARCHAR(30), 'origin' VARCHAR(255), 'bio' TEXT, 'firstregistered' TIMESTAMP NOT NULL, 'lastseen' TIMESTAMP);";
 		
 		dbManager = new SQLite(this.log, this.logPrefix, "profiles", pFolder.getPath());
 		dbManager.open();
@@ -168,6 +168,19 @@ public class PlayerProfiles extends JavaPlugin {
 						e.printStackTrace();
 					}
 			}
+			//****
+			//List
+			//****
+				else if (args[0].equalsIgnoreCase("list"))
+				{
+					try
+					{
+					pHandler.getSmallPlayerList(user);
+					} catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+				}
 			else
 			{
 				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|from||bio|list|fulllist|help");
