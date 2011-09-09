@@ -68,8 +68,8 @@ public class ProfileHandler {
 		twitterAccount = result.getString("twitteraccount");
 		from = result.getString("from");
 		bio = result.getString("bio");
-		registerDate = result.getString("firstregistered");
-		lastSeenDate = result.getString("lastseen");
+		registerDate = result.getTimestamp("firstregistered").toString();
+		lastSeenDate = result.getTimestamp("lastseen").toString();
 		
 		String nameLine = ChatColor.RED + "Name: " + ChatColor.WHITE + viewTarget;
 		if (realName != null)
