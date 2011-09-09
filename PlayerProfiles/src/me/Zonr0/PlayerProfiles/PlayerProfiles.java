@@ -39,13 +39,22 @@ public class PlayerProfiles extends JavaPlugin {
 		dbManager = new SQLite(this.log, this.logPrefix, "profiles", pFolder.getPath());
 		dbManager.open();
 		
-		if(dbManager.createTable(TableCreationQuery))
+		if (dbManager.checkTable("profiles"))
 		{
-			log.info("Table creation succesful");
+			log.info("PlayerProfiles: Profile table found, skipping creation.");
 		}
 		else
 		{
-			log.info("Table failed to initialize");
+			log.info("PlayerProfiles: Profiles table not found, creating.");
+			
+			if(dbManager.createTable(TableCreationQuery))
+			{
+				log.info("PlayerProfiles: Table creation succesful");
+			}
+			else
+			{
+				log.info("PlayerProfiles: Table failed to initialize");
+			}
 		}
 	}
 	
@@ -178,6 +187,10 @@ public class PlayerProfiles extends JavaPlugin {
 				                     "\n/profile list - List the last ten registered users seen." +
 				                     "\n/profile help - Display this message." +
 				                     "\n/profile about - Display plugin information.");
+				}
+				else if (args[0].equalsIgnoreCase("about"))
+				{
+					user.sendMessage("PlayerProfiles by Zonr_0, uses PatPeter's SQLLite/MySQL bukkit wrapper.");
 				}
 			else
 			{
