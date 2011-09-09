@@ -1,11 +1,16 @@
 package me.Zonr0.PlayerProfiles;
 
+import java.util.List;
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.util.Date;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.sql.Timestamp;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.json.simple.parser.ParseException;
 
 public class ProfileHandler {
 	public PlayerProfiles plugin;
@@ -16,7 +21,7 @@ public class ProfileHandler {
 
 	public void registerPlayer(Player sender) throws SQLException
 	{
-		Date currentDate = new Date();
+		Timestamp currentDate = new Timestamp(0);
 		String sizeQuery = "SELECT COUNT(*) as count FROM profiles WHERE username='" + sender.getName() + "'";
 		String registerQuery = "INSERT INTO profiles (username, firstregistered, lastseen) VALUES (" + "'" + sender.getName() + "','" + currentDate.toString() + "','" + currentDate.toString() + "')";
 		
@@ -96,6 +101,55 @@ public class ProfileHandler {
 		plugin.dbManager.query(updateQuery);
 	}
 	
+	public void updateName(Player target, String name) throws SQLException
+	{
+		String sanName = sanitizeInput(name);
+		String updateQuery = "UPDATE profiles SET realname='" + sanName + "' WHERE username='" + target.getName() + "'";
+		plugin.dbManager.query(updateQuery);
+	}
+	public void updateTwitter(Player target, String twitter) throws SQLException
+	{
+		String santwit = sanitizeInput(twitter);
+		String updateQuery = "UPDATE profiles SET twitteraccount='" + santwit + "' WHERE username='" + target.getName() + "'";
+		plugin.dbManager.query(updateQuery);
+	}
+	public void updateFrom(Player target, String from) throws SQLException
+	{
+		String sanFrom = sanitizeInput(from);
+		String updateQuery = "UPDATE profiles SET from='" + sanFrom + "' WHERE username='" + target.getName() + "'";
+		plugin.dbManager.query(updateQuery);
+	}
+	public void updateBio(Player target, String bio) throws SQLException
+	{
+		String sanBio = sanitizeInput(bio);
+		String updateQuery = "UPDATE profiles SET bio='" + sanBio + "' WHERE username='" + target.getName() + "'";
+		plugin.dbManager.query(updateQuery);
+	}
+	public void getSmallPlayerList(Player target) throws SQLException
+	{
+		//TODO: Refactor the date field to use SQL dates instead of java dates.
+		int LIST_SIZE = 10;
+		DateFormat format = DateFormat.getDateTimeInstance();
+		List<Date> dateList = new ArrayList<Date>();
+		String dateString;
+		
+		String getQuery = "SELECT username,lastseen  FROM profiles";
+		ResultSet results = plugin.dbManager.query(getQuery);
+		
+		while(results.next())
+		{
+			dateString = results.getString("lastseen");
+			try {
+				dateList.add(format.parse(dateString));
+			} catch (java.text.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		Collections.
+		Collections.sort(dateList);
+	}
+	
 	public boolean isRegistered(Player target) throws SQLException
 	{
 		String viewQuery = "SELECT * FROM profiles WHERE username='" + target.getName() + "'";
@@ -138,5 +192,26 @@ public class ProfileHandler {
 		}
 		
 		return true;
+	}
+	
+	private String sanitizeInput(String input)
+	{
+		String output = "";
+		String raw = input;
+		for (int i = 0; i < raw.length(); i++)
+		{
+			if (raw.charAt(i) == '\'')
+			{
+				output = output + '\'';
+				output = output + raw.charAt(i);
+				output = output + '\'';
+			}
+			else
+			{
+				output = output + raw.charAt(i);
+			}
+		}
+		
+		return output;
 	}
 }

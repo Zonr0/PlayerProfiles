@@ -34,7 +34,7 @@ public class PlayerProfiles extends JavaPlugin {
 		
 		createPluginFolder();
 		
-		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'twitteraccount' VARCHAR(30), 'from' VARCHAR(255), 'bio' TEXT, 'firstregistered' VARCHAR(255) NOT NULL, 'lastseen' VARCHAR(255));";
+		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'twitteraccount' VARCHAR(30), 'from' VARCHAR(255), 'bio' TEXT, 'firstregistered' TIMESTAMP NOT NULL, 'lastseen' TIMESTAMP);";
 		
 		dbManager = new SQLite(this.log, this.logPrefix, "profiles", pFolder.getPath());
 		dbManager.open();
@@ -65,8 +65,12 @@ public class PlayerProfiles extends JavaPlugin {
 			log.info("Debug information goes here.");
 			return true;
 		}
+		//Main PlayerProfiles Commands
 		else if (cmd.getName().equalsIgnoreCase("profile")) 
 		{
+			//********
+			//Register
+			//********
 			if (args[0].equalsIgnoreCase("register"))
 			{
 				try 
@@ -78,6 +82,9 @@ public class PlayerProfiles extends JavaPlugin {
 					e.printStackTrace();
 				}
 			}
+			//****
+			//View
+			//****
 			else if (args[0].equalsIgnoreCase("view"))
 			{
 				viewTarget = args[1];
@@ -89,9 +96,81 @@ public class PlayerProfiles extends JavaPlugin {
 					e.printStackTrace();
 				}
 			}
+			//****
+			//Name
+			//****
+			else if (args[0].equalsIgnoreCase("name"))
+			{
+				String fullName = "";
+				for (int i = 1; i < args.length; i++)
+				{
+					fullName = fullName + args[i];
+				}
+				try
+				{
+				pHandler.updateName(user, fullName);
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			//*******
+			//Twitter
+			//*******
+			else if (args[0].equalsIgnoreCase("twitter"))
+			{
+				String fullTwitter = "";
+				for (int i = 1; i < args.length; i++)
+				{
+					fullTwitter = fullTwitter + args[i];
+				}
+				try
+				{
+				pHandler.updateTwitter(user, fullTwitter);
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			//****
+			//From
+			//****
+				else if (args[0].equalsIgnoreCase("from"))
+				{
+					String fullFrom = "";
+					for (int i = 1; i < args.length; i++)
+					{
+						fullFrom = fullFrom + args[i];
+					}
+					try
+					{
+					pHandler.updateFrom(user, fullFrom);
+					} catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+			}
+			//***
+			//Bio
+			//***
+				else if (args[0].equalsIgnoreCase("bio"))
+				{
+					String fullBio = "";
+					for (int i = 1; i < args.length; i++)
+					{
+						fullBio = fullBio + args[i];
+					}
+					try
+					{
+					pHandler.updateBio(user, fullBio);
+					} catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+			}
 			else
 			{
-				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|origin");
+				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|from||bio|list|fulllist|help");
 			}
 			return true;
 		}
