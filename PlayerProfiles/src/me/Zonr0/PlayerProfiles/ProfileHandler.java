@@ -2,6 +2,9 @@ package me.Zonr0.PlayerProfiles;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -61,8 +64,8 @@ public class ProfileHandler {
 		twitterAccount = result.getString("twitteraccount");
 		from = result.getString("origin");
 		bio = result.getString("bio");
-		registerDate = result.getString("firstregistered");
-		lastSeenDate = result.getString("lastseen");
+		registerDate = convertDate(result.getString("firstregistered"));
+		lastSeenDate = convertDate(result.getString("lastseen"));
 		
 		String nameLine = ChatColor.RED + "Name: " + ChatColor.WHITE + viewTarget;
 		if (realName != null)
@@ -139,7 +142,7 @@ public class ProfileHandler {
 			{
 				profileLine.append(' ');
 			}
-			profileLine.append(results.getString("lastseen"));
+			profileLine.append(convertDate(results.getString("lastseen")));
 			output = profileLine.toString();
 			target.sendMessage(output);
 			profileLine.delete(0, profileLine.length());
@@ -213,5 +216,21 @@ public class ProfileHandler {
 		}
 		
 		return output;
+	}
+	private String convertDate(String dbDate)
+	{
+		String pattern = "yyyy-MM-dd H:mm:ss";
+		Date prettyDate;
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+		format.setTimeZone(TimeZone.getTimeZone("GMT"));
+		try 
+		{
+			prettyDate = format.parse(dbDate);
+			return prettyDate.toString();
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "ERROR: Date Conversion Error";
 	}
 }
