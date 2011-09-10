@@ -135,16 +135,16 @@ public class PlayerProfiles extends JavaPlugin {
 			//***
 			//Bio
 			//***
-//				else if (args[0].equalsIgnoreCase("bio"))
-//				{
-//					try
-//					{
-//					pHandler.updateBio(user, fullText);
-//					} catch (SQLException e)
-//					{
-//						e.printStackTrace();
-//					}
-//				}
+				else if (args[0].equalsIgnoreCase("bio"))
+				{
+					try
+					{
+					pHandler.updateBio(user, fullText);
+					} catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+				}
 			//****
 			//List
 			//****
@@ -169,7 +169,7 @@ public class PlayerProfiles extends JavaPlugin {
 					user.sendMessage("/profile name - Your real name.");
 					user.sendMessage("/profile twitter - Your twitter account");
 					user.sendMessage("/profile from - Where you are coming from, how you know about this server. ie: personal friend, etc.");
-					//user.sendMessage("/profile bio - A short description of who you are.");
+					user.sendMessage("/profile bio - A short description of who you are.");
 					user.sendMessage("There are other commands available to you as well:");
 					user.sendMessage("/profile view <username> - View a user's profile.");
 					user.sendMessage("/profile list - List the last ten registered users seen.");
@@ -182,7 +182,7 @@ public class PlayerProfiles extends JavaPlugin {
 				}
 			else
 			{
-				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|from|list|help|about");
+				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|from|bio|list|help|about");
 			}
 			return true;
 		}

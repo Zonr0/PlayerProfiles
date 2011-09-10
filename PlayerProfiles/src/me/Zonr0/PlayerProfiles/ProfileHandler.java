@@ -205,7 +205,6 @@ public class ProfileHandler {
 			{
 				output = output + '\'';
 				output = output + raw.charAt(i);
-				output = output + '\'';
 			}
 			else
 			{
