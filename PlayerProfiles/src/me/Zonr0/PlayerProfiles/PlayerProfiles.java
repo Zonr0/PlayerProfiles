@@ -65,7 +65,8 @@ public class PlayerProfiles extends JavaPlugin {
 		log.info("PlayerProfiles has been disabled.");
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
+	{
 		String viewTarget;
 		Player user = (Player)sender;
 		
@@ -78,24 +79,10 @@ public class PlayerProfiles extends JavaPlugin {
 		else if (cmd.getName().equalsIgnoreCase("profile")) 
 		{
 			String fullText = grabText(args);
-			//********
-			//Register
-			//********
-			if (args[0].equalsIgnoreCase("register"))
-			{
-				try 
-				{
-					pHandler.registerPlayer(user);
-					
-				} catch (SQLException e)
-				{
-					e.printStackTrace();
-				}
-			}
 			//****
 			//View
 			//****
-			else if (args[0].equalsIgnoreCase("view"))
+			if (args[0].equalsIgnoreCase("view"))
 			{
 				viewTarget = args[1];
 				try
@@ -144,20 +131,20 @@ public class PlayerProfiles extends JavaPlugin {
 					{
 						e.printStackTrace();
 					}
-			}
+				}
 			//***
 			//Bio
 			//***
-				else if (args[0].equalsIgnoreCase("bio"))
-				{
-					try
-					{
-					pHandler.updateBio(user, fullText);
-					} catch (SQLException e)
-					{
-						e.printStackTrace();
-					}
-			}
+//				else if (args[0].equalsIgnoreCase("bio"))
+//				{
+//					try
+//					{
+//					pHandler.updateBio(user, fullText);
+//					} catch (SQLException e)
+//					{
+//						e.printStackTrace();
+//					}
+//				}
 			//****
 			//List
 			//****
@@ -174,19 +161,20 @@ public class PlayerProfiles extends JavaPlugin {
 			//Help
 				else if (args[0].equalsIgnoreCase("help"))
 				{
-					user.sendMessage("PlayerProfiles is a system for keeping track of various pieces of personal information." +
-				                     "It is designed for simple use. To register yourself, simply type /profile register and" +
-				                     "you will be registered in the database. To fully take advantage of this system you will" +
-				                     "want to fill out a few other fields to help identify you. Available fields are:" +
-				                     "\n/profile name - Your real name." +
-				                     "\n/profile twitter - Your twitter account" +
-				                     "\n/profile from - Where you are coming from, how you know about this server. ie: personal friend, etc." +
-				                     "\n/profile bio - A short description of who you are." +
-				                     "\nThere are other commands available to you as well:" +
-				                     "\n/profile view <username> - View a user's profile." +
-				                     "\n/profile list - List the last ten registered users seen." +
-				                     "\n/profile help - Display this message." +
-				                     "\n/profile about - Display plugin information.");
+					user.sendMessage("PlayerProfiles is a system for keeping track of various pieces of personal information. " +
+				                     "It is designed for simple use. To register yourself, simply type /profile register and " +
+				                     "you will be registered in the database. To fully take advantage of this system you will " +
+				                     "want to fill out a few other fields to help identify you. Available fields are:");
+					
+					user.sendMessage("/profile name - Your real name.");
+					user.sendMessage("/profile twitter - Your twitter account");
+					user.sendMessage("/profile from - Where you are coming from, how you know about this server. ie: personal friend, etc.");
+					//user.sendMessage("/profile bio - A short description of who you are.");
+					user.sendMessage("There are other commands available to you as well:");
+					user.sendMessage("/profile view <username> - View a user's profile.");
+					user.sendMessage("/profile list - List the last ten registered users seen.");
+					user.sendMessage("/profile help - Display this message.");
+					user.sendMessage("/profile about - Display plugin information.");
 				}
 				else if (args[0].equalsIgnoreCase("about"))
 				{
@@ -194,7 +182,7 @@ public class PlayerProfiles extends JavaPlugin {
 				}
 			else
 			{
-				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|from||bio|list|help|about");
+				sender.sendMessage(ChatColor.RED + "/Profile register|view|name|twitter|from|list|help|about");
 			}
 			return true;
 		}

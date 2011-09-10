@@ -196,6 +196,7 @@ public class ProfileHandler {
 	
 	private String sanitizeInput(String input)
 	{
+		
 		String output = "";
 		String raw = input;
 		for (int i = 0; i < raw.length(); i++)

@@ -23,10 +23,11 @@ public class PlayerProfilesPlayerListener extends PlayerListener {
 		{
 			if (!plugin.pHandler.isRegistered(joiningPlayer))
 			{
-				String nagMessage = ChatColor.RED + "Welcome!" + ChatColor.WHITE + " If you intend to stay and play on this server, please take the time to register your username";
-				nagMessage = nagMessage + "using " + ChatColor.RED + "/profile register." + ChatColor.WHITE + " When you get the chance, take the time to fill out any relevant fields as well.";
+				String nagMessage = ChatColor.RED + "Welcome!" + ChatColor.WHITE + " This server is running PlayerProfiles";
+				nagMessage = nagMessage + " When you get the chance, please take the time to fill out some of the profile fields.";
 				nagMessage = nagMessage + "Please type " + ChatColor.RED + "/profile help" + ChatColor.WHITE + " for more details.";
 				joiningPlayer.sendMessage(nagMessage);
+				plugin.pHandler.registerPlayer(joiningPlayer);
 				return;
 			}
 			plugin.pHandler.updateLastSeen(joiningPlayer);
