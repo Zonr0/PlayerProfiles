@@ -34,7 +34,7 @@ public class PlayerProfiles extends JavaPlugin {
 		
 		createPluginFolder();
 		
-		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'twitteraccount' VARCHAR(30), 'origin' VARCHAR(255), 'bio' TEXT, 'firstregistered' TIMESTAMP NOT NULL, 'lastseen' TIMESTAMP);";
+		String TableCreationQuery = "CREATE TABLE profiles ( 'id' INTEGER PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'realname' VARCHAR(80), 'aliases' VARCHAR(120), 'twitteraccount' VARCHAR(30), 'origin' VARCHAR(255), 'bio' TEXT, 'firstregistered' TIMESTAMP NOT NULL, 'lastseen' TIMESTAMP);";
 		
 		dbManager = new SQLite(this.log, this.logPrefix, "profiles", pFolder.getPath());
 		dbManager.open();
@@ -106,6 +106,19 @@ public class PlayerProfiles extends JavaPlugin {
 					e.printStackTrace();
 				}
 			}
+			//****
+			//alias
+			//****
+			else if (args[0].equalsIgnoreCase("alias"))
+			{
+				try
+				{
+				pHandler.updateAlias(user, fullText);
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
 			//*******
 			//Twitter
 			//*******
@@ -162,11 +175,12 @@ public class PlayerProfiles extends JavaPlugin {
 				else if (args[0].equalsIgnoreCase("help"))
 				{
 					user.sendMessage("PlayerProfiles is a system for keeping track of various pieces of personal information. " +
-				                     "It is designed for simple use. To register yourself, simply type /profile register and " +
-				                     "you will be registered in the database. To fully take advantage of this system you will " +
-				                     "want to fill out a few other fields to help identify you. Available fields are:");
+				                     "It is designed for simple use, and you will be automatically registered upon first login. " +
+									 "Available commands are listed below. Please remember that this plugin is a work in progress," +
+				                      "so if you find any bugs, please feel free to message me.");
 					
 					user.sendMessage("/profile name - Your real name.");
+					user.sendMessage("/profile alias - Other usernames/aliases you are known by.");
 					user.sendMessage("/profile twitter - Your twitter account");
 					user.sendMessage("/profile from - Where you are coming from, how you know about this server. ie: personal friend, etc.");
 					user.sendMessage("/profile bio - A short description of who you are.");

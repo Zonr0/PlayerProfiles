@@ -41,6 +41,7 @@ public class ProfileHandler {
 		String bio;
 		String registerDate;
 		String lastSeenDate;
+		String alias;
 		
 		String viewQuery = "SELECT * FROM profiles WHERE username='" + viewTarget + "'";
 		String countQuery = "SELECT COUNT(*) as count FROM profiles WHERE username ='" + viewTarget + "'";
@@ -63,6 +64,7 @@ public class ProfileHandler {
 		realName = result.getString("realname");
 		twitterAccount = result.getString("twitteraccount");
 		from = result.getString("origin");
+		alias = result.getString("aliases");
 		bio = result.getString("bio");
 		registerDate = convertDate(result.getString("firstregistered"));
 		lastSeenDate = convertDate(result.getString("lastseen"));
@@ -73,6 +75,10 @@ public class ProfileHandler {
 			nameLine = nameLine + " aka " + realName;
 		}
 		requester.sendMessage(nameLine);
+		if (alias != null)
+		{
+			requester.sendMessage(ChatColor.RED + "Other Aliases:" + ChatColor.WHITE + alias);
+		}
 		if (twitterAccount != null)
 		{
 		requester.sendMessage(ChatColor.RED + "Twitter: " + ChatColor.WHITE + twitterAccount);
@@ -118,6 +124,12 @@ public class ProfileHandler {
 	{
 		String sanBio = sanitizeInput(bio);
 		String updateQuery = "UPDATE profiles SET bio='" + sanBio + "' WHERE username='" + target.getName() + "'";
+		plugin.dbManager.query(updateQuery);
+	}
+	public void updateAlias(Player target, String aliases) throws SQLException
+	{
+		String sanAlias = sanitizeInput(aliases);
+		String updateQuery = "UPDATE profiles SET aliases='" + sanAlias + "' WHERE username='" + target.getName() + "'";
 		plugin.dbManager.query(updateQuery);
 	}
 	public void getSmallPlayerList(Player target) throws SQLException
